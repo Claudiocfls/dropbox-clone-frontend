@@ -7,8 +7,21 @@ import pt from 'date-fns/locale/pt';
 import DropZone from 'react-dropzone';
 import socket from 'socket.io-client';
 
+const mockedFile = {
+  _id: 2,
+  url: '',
+  title: 'Arquivo mockado',
+  createdAt: new Date(),
+};
+
+const mockedBox = {
+  files: [mockedFile, mockedFile, mockedFile],
+  _id: '222222',
+  title: 'Box mockada',
+};
+
 const Box = (props) => {
-  const [box, setBox] = useState({});
+  const [box, setBox] = useState(mockedBox);
   const { match: { params: { id } } } = props;
 
   useEffect(() => {
@@ -50,15 +63,19 @@ const Box = (props) => {
       </header>
       <DropZone onDropAccepted={handleUpload}>
         { ({ getRootProps, getInputProps }) => (
-          <div style={{ border: '1px solid #000' }} { ...getRootProps() }>
+          <div className="input-area" { ...getRootProps() }>
             <input { ...getInputProps() } />
             <p>Arraste arquivos ou clique aqui</p>
           </div>
         )}
       </DropZone>
       <ul>
+        <li className="list-item">
+          <strong>Nome do arquivo</strong>
+          <strong>Criado em</strong>
+        </li>
         {box.files && box.files.map(file => (
-          <li key={file._id}>
+          <li key={file._id} className="list-item">
             <a href={file.url}>
               <MdInsertDriveFile size={24} color="#A5CFFF" />
               <strong>{file.title}</strong>
@@ -68,6 +85,12 @@ const Box = (props) => {
             })}</span>
           </li>
         ))}
+        {!box.files && (
+          <div className="box-empty-warning">
+            <MdInsertDriveFile size={92} color="#d6d6d6" />
+            <h1>Não há arquivos<br/>nessa caixa</h1>
+          </div>
+        )}
       </ul>
     </div>
   );
