@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-import { MdInsertDriveFile } from 'react-icons/md';
 import api from '../../services/api';
-import { formatDistance } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-import DropZone from 'react-dropzone';
 import socket from 'socket.io-client';
+import SidePanel from '../../components/SidePanel';
+import FilesHeader from '../../components/FilesHeader';
+import LoadFile from '../../components/LoadFile';
+import FilesList from '../../components/FilesList';
+import { makeStyles } from '@material-ui/core';
+import PreviewFile from '../../components/PreviewFile';
 
+const useStyles = makeStyles({
+  content: {
+    display: 'grid',
+    gridTemplateColumns: 'auto 280px',
+    gridColumnGap: 40,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    padding: 40,
+  },
+});
 // const mockedFile = {
 //   _id: 2,
 //   url: '',
@@ -27,6 +42,7 @@ const Box = (props) => {
     _id: id,
     title: 'alguma coisa',
   });
+  const classes = useStyles();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,52 +64,20 @@ const Box = (props) => {
       }
     });
   }
-
-  const handleUpload = (files) => {
-    files.forEach(file => {
-      const data = new FormData();
-      data.append('file', file);
-      
-      api.post(`boxes/${box._id}/files`, data);
-    });
-  }
   
   return (
-    <div id="box-container">
-      <header>
-        <h1>{box.title}</h1>
-      </header>
-      <DropZone onDropAccepted={handleUpload}>
-        { ({ getRootProps, getInputProps }) => (
-          <div className="input-area" { ...getRootProps() }>
-            <input { ...getInputProps() } />
-            <p>Arraste arquivos ou clique aqui</p>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'row'}}>
+      <SidePanel />
+      <div className={classes.container}>
+        <FilesHeader title={box.title} />
+        <div className={classes.content} >
+          <div>
+            <LoadFile id={box._id} />
+            <FilesList box={box} />
           </div>
-        )}
-      </DropZone>
-      <ul>
-        <li className="list-item">
-          <strong>Nome do arquivo</strong>
-          <strong>Criado em</strong>
-        </li>
-        {box.files && box.files.map(file => (
-          <li key={file._id} className="list-item">
-            <a href={file.url}>
-              <MdInsertDriveFile size={24} color="#A5CFFF" />
-              <strong>{file.title}</strong>
-            </a>
-            <span>Há {formatDistance(new Date(file.createdAt), new Date(), {
-              locale: pt
-            })}</span>
-          </li>
-        ))}
-        {!box.files && (
-          <div className="box-empty-warning">
-            <MdInsertDriveFile size={92} color="#d6d6d6" />
-            <h1>Não há arquivos<br/>nessa caixa</h1>
-          </div>
-        )}
-      </ul>
+          <PreviewFile />
+        </div>
+      </div>
     </div>
   );
 }

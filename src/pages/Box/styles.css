@@ -1,17 +1,19 @@
-#box-container {
-  padding: 64px 128px;
-}
+/* #box-container { */
+  /* padding: 40px; */
+  /* width: 100%; */
+  /* padding-right: 340px; */
+/* } */
 
-#box-container header{
+/* #box-container header{
   display: flex;
   justify-content: center;
   align-items: center;
   padding-bottom: 12px;
-}
+} */
 
-#box-container ul {
-  padding-top: 32px;
-}
+/* #box-container ul { */
+  /* padding-top: 32px; */
+/* } */
 
 .list-item {
   border-bottom: 1px solid #d6d6d6;
