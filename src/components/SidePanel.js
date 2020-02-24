@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   },
 });
 
-const SidePanel = props => {
+const SidePanel = () => {
   const classes = useStyles();
 
   return (
