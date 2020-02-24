@@ -22,18 +22,6 @@ const useStyles = makeStyles({
     padding: 40,
   },
 });
-// const mockedFile = {
-//   _id: 2,
-//   url: '',
-//   title: 'Arquivo mockado',
-//   createdAt: new Date(),
-// };
-
-// const mockedBox = {
-//   files: [mockedFile, mockedFile, mockedFile],
-//   _id: '222222',
-//   title: 'Box mockada',
-// };
 
 const Box = (props) => {
   const { match: { params: { id } } } = props;
