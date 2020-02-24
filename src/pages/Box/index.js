@@ -7,33 +7,35 @@ import pt from 'date-fns/locale/pt';
 import DropZone from 'react-dropzone';
 import socket from 'socket.io-client';
 
-const mockedFile = {
-  _id: 2,
-  url: '',
-  title: 'Arquivo mockado',
-  createdAt: new Date(),
-};
+// const mockedFile = {
+//   _id: 2,
+//   url: '',
+//   title: 'Arquivo mockado',
+//   createdAt: new Date(),
+// };
 
-const mockedBox = {
-  files: [mockedFile, mockedFile, mockedFile],
-  _id: '222222',
-  title: 'Box mockada',
-};
+// const mockedBox = {
+//   files: [mockedFile, mockedFile, mockedFile],
+//   _id: '222222',
+//   title: 'Box mockada',
+// };
 
 const Box = (props) => {
-  const [box, setBox] = useState(mockedBox);
   const { match: { params: { id } } } = props;
+  const [box, setBox] = useState({
+    files: [],
+    _id: id,
+    title: 'alguma coisa',
+  });
 
   useEffect(() => {
-    if(Object.keys(box).length === 0) {
-      const fetchData = async () => {
-        const response = await api.get(`boxes/${id}`);
-        const boxData = response.data;
-        setBox(boxData);
-      };
-      fetchData();
-      subscribeToNewFiles();
-    }
+    const fetchData = async () => {
+      const response = await api.get(`boxes/${id}`);
+      const boxData = response.data;
+      setBox(boxData);
+    };
+    fetchData();
+    subscribeToNewFiles();
   }, [id]);
   
   const subscribeToNewFiles = () => {
