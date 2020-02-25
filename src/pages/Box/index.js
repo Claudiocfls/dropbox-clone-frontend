@@ -30,6 +30,7 @@ const Box = (props) => {
     _id: id,
     title: 'alguma coisa',
   });
+  const [newFile, setNewFile] = useState({}); 
   const classes = useStyles();
 
   useEffect(() => {
@@ -38,18 +39,23 @@ const Box = (props) => {
       const boxData = response.data;
       setBox(boxData);
     };
+    
     fetchData();
     subscribeToNewFiles();
   }, [id]);
-  
+
+  useEffect(() => {
+    if (Object.keys(newFile).length)
+      setBox({ ...box, files: [newFile, ...box.files] });
+  }, [newFile]);
+
   const subscribeToNewFiles = () => {
     const io = socket('http://localhost:3001');
     
     io.emit('connectRoom', id);
+    
     io.on('file', data => {
-      if(box.files) {
-        setBox({ ...box, files: [data, ...box.files] });
-      }
+      setNewFile(data);
     });
   }
   
