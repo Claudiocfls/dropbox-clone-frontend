@@ -4,6 +4,7 @@ import DropZone from 'react-dropzone';
 import api from '../services/api';
 import { Button } from '@material-ui/core';
 import classnames from 'classnames';
+import UploadReport from './UploadReport';
 
 const useStyles = makeStyles({
   fileSectionTitle: {
@@ -29,19 +30,33 @@ const useStyles = makeStyles({
 
 const LoadFile = props => {
   const [isDragZoneHidden, setIsDragZone] = useState(true);
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const { id } = props;
+  let fileList = [];
 
   const handleClick = () => {
     setIsDragZone(!isDragZoneHidden);
+  }
+  
+  const addFileToQueue = (file) => {
+    if(!open) setOpen(true);
+  }
+
+  const removeFile = (file) => {
+    console.log(open);
+    if (open) setOpen(false);
   }
 
   const handleUpload = (files) => {
     files.forEach(file => {
       const data = new FormData();
       data.append('file', file);
-      
-      api.post(`boxes/${id}/files`, data);
+      addFileToQueue(file);
+
+      api.post(`boxes/${id}/files`, data).then(res => {
+        removeFile(file);
+      });
     });
   }
 
@@ -68,6 +83,7 @@ const LoadFile = props => {
           )}
         </DropZone>
       </div>
+      <UploadReport open={open} onClose={() => {}} />
     </div>
   );
 };
